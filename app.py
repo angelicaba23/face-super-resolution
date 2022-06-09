@@ -224,18 +224,17 @@ if image_file is not None or check:
         zf.writestr(zfi, '')
 
     for rst_objects in rst_objects:
-      rts_boxes = [rst_objects['left'],rst_objects['top'],rst_objects['width']+rst_objects['left'],rst_objects['height']+rst_objects['top']]
-      #st.write(rts_boxes)
-      crop_image = crop_object(bg_image, rts_boxes)
-      cols[i].image(crop_image)
-      
-    if st.button("PROCESS"):
-      for rst_objects in rst_objects:
         rts_boxes = [rst_objects['left'],rst_objects['top'],rst_objects['width']+rst_objects['left'],rst_objects['height']+rst_objects['top']]
         #st.write(rts_boxes)
-        crop_image = crop_object(bg_image, rts_boxes)
-        #cols[i].image(crop_image)
+        crop_image1 = crop_object(bg_image, rts_boxes)
+        cols[i].image(crop_image1)
 
+    if st.button("PROCESS"):
+        for rst_objects2 in rst_objects:
+          rts_boxes2 = [rst_objects['left'],rst_objects['top'],rst_objects['width']+rst_objects['left'],rst_objects['height']+rst_objects['top']]
+          #st.write(rts_boxes)
+          crop_image = crop_object(bg_image, rts_boxes2)
+          
         #-------CNN-----
         im_bgr = predictCNN(crop_image)
 

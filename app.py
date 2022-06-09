@@ -229,49 +229,51 @@ if image_file is not None or check:
         crop_image1 = crop_object(bg_image, rts_boxes)
         cols[i].image(crop_image1)
 
+    i = 0
     if st.button("PROCESS"):
       for rst_objects2 in rst_objects:
         rts_boxes2 = [rst_objects['left'],rst_objects['top'],rst_objects['width']+rst_objects['left'],rst_objects['height']+rst_objects['top']]
         #st.write(rts_boxes)
         crop_image = crop_object(bg_image, rts_boxes2)
         
-      #-------CNN-----
-      im_bgr = predictCNN(crop_image)
+        #-------CNN-----
+        im_bgr = predictCNN(crop_image)
 
-      cols_srcnn[i].image(im_bgr)
+        cols_srcnn[i].image(im_bgr)
 
-      im_rgb = im_bgr[:, :, [2, 1, 0]] #numpy.ndarray
-      cv2.imwrite("results/restored_imgs/crop_img_0.png", im_rgb)
-      zf.write("results/restored_imgs/crop_img_0.png", f'cnn/crop_img_{str(i)}.png')
-      ret, img_enco = cv2.imencode(".png", im_rgb)  #numpy.ndarray
-      srt_enco = img_enco.tobytes()   #bytes
-      img_BytesIO = BytesIO(srt_enco) #_io.BytesIO
-      img_BufferedReader = BufferedReader(img_BytesIO) #_io.BufferedReader
+        im_rgb = im_bgr[:, :, [2, 1, 0]] #numpy.ndarray
+        cv2.imwrite("results/restored_imgs/crop_img_0.png", im_rgb)
+        zf.write("results/restored_imgs/crop_img_0.png", f'cnn/crop_img_{str(i)}.png')
+        ret, img_enco = cv2.imencode(".png", im_rgb)  #numpy.ndarray
+        srt_enco = img_enco.tobytes()   #bytes
+        img_BytesIO = BytesIO(srt_enco) #_io.BytesIO
+        img_BufferedReader = BufferedReader(img_BytesIO) #_io.BufferedReader
 
-      cols_srcnn[i].download_button(
-        label="📥",
-        data=img_BufferedReader,
-        file_name="srcnn_img_"+str(i)+".png",
-        mime="image/png"
-      )
-
-      #cols_srgan[i].image(predictSrgan(crop_image))
-      #cols_srgan[i].image(predictSrgan("crop_img_0.png"))
-      img_gan=predictSrgan("crop_img_0.png")
-      #img_gan = im_bgr
-      cols_srgan[i].image(img_gan)
-      with open("results/restored_imgs/crop_img_0.png", "rb") as file:
-        cols_srgan[i].download_button(
-        label="📥",
-        data=file,
-        file_name="srgan_img_"+str(i)+".png",
-        mime="image/png"
+        cols_srcnn[i].download_button(
+          label="📥",
+          data=img_BufferedReader,
+          file_name="srcnn_img_"+str(i)+".png",
+          mime="image/png"
         )
-      print("img" + str(i))
-      i += 1
-      # Add multiple files to the zip
-      zf.write('results/restored_imgs/crop_img_0.png', f'gan/crop_img_{str(i)}.png')
 
+        #cols_srgan[i].image(predictSrgan(crop_image))
+        #cols_srgan[i].image(predictSrgan("crop_img_0.png"))
+        img_gan=predictSrgan("crop_img_0.png")
+        #img_gan = im_bgr
+        cols_srgan[i].image(img_gan)
+        with open("results/restored_imgs/crop_img_0.png", "rb") as file:
+          cols_srgan[i].download_button(
+          label="📥",
+          data=file,
+          file_name="srgan_img_"+str(i)+".png",
+          mime="image/png"
+          )
+        
+        # Add multiple files to the zip
+        zf.write('results/restored_imgs/crop_img_0.png', f'gan/crop_img_{str(i)}.png')
+        print("img" + str(i))
+        i += 1
+        
       # close the Zip File
       zf.close()
 

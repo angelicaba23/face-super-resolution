@@ -223,19 +223,13 @@ if image_file is not None or check:
         zfi = zipfile.ZipInfo(n)
         zf.writestr(zfi, '')
 
-    for rst_objects in rst_objects:
-        rts_boxes = [rst_objects['left'],rst_objects['top'],rst_objects['width']+rst_objects['left'],rst_objects['height']+rst_objects['top']]
-        #st.write(rts_boxes)
-        crop_image1 = crop_object(bg_image, rts_boxes)
-        cols[i].image(crop_image1)
-
     i = 0
     if st.button("PROCESS"):
       for rst_objects2 in rst_objects:
         rts_boxes2 = [rst_objects['left'],rst_objects['top'],rst_objects['width']+rst_objects['left'],rst_objects['height']+rst_objects['top']]
         #st.write(rts_boxes)
         crop_image = crop_object(bg_image, rts_boxes2)
-        
+        cols[i].image(crop_image)
         #-------CNN-----
         im_bgr = predictCNN(crop_image)
 
@@ -273,7 +267,6 @@ if image_file is not None or check:
         zf.write('results/restored_imgs/crop_img_0.png', f'gan/crop_img_{str(i)}.png')
         print("img" + str(i))
         i += 1
-        
       # close the Zip File
       zf.close()
 
